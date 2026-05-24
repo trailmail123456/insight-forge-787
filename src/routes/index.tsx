@@ -239,7 +239,6 @@ function SectionHead({
         <h2 className="mt-3 font-display text-3xl font-semibold tracking-tight md:text-4xl">{title}</h2>
       </div>
       <Link
-        // @ts-expect-error – generic string for placeholder routes
         to={link.to}
         className="hidden shrink-0 items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground sm:inline-flex"
       >
