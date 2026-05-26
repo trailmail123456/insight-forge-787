@@ -85,6 +85,23 @@ export function SiteHeader() {
           >
             {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
+          <Link
+            to={signedIn ? "/admin" : "/login"}
+            aria-label={signedIn ? "Admin" : "Sign in"}
+            className="ml-1 inline-flex items-center gap-1.5 rounded-md border border-border bg-background px-2.5 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-muted"
+          >
+            {signedIn ? (
+              <>
+                <LayoutDashboard className="h-3.5 w-3.5" />
+                Admin
+              </>
+            ) : (
+              <>
+                <LogIn className="h-3.5 w-3.5" />
+                Sign in
+              </>
+            )}
+          </Link>
         </div>
       </div>
     </header>
