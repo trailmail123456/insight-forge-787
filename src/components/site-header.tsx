@@ -1,6 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Moon, Sun, Search } from "lucide-react";
+import { Moon, Sun, Search, LogIn, LayoutDashboard } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const nav = [
   { to: "/", label: "Home" },
@@ -13,6 +14,7 @@ const nav = [
 export function SiteHeader() {
   const path = useRouterState({ select: (s) => s.location.pathname });
   const [dark, setDark] = useState(false);
+  const [signedIn, setSignedIn] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem("theme");
@@ -20,6 +22,14 @@ export function SiteHeader() {
     const isDark = stored ? stored === "dark" : prefers;
     setDark(isDark);
     document.documentElement.classList.toggle("dark", isDark);
+  }, []);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => setSignedIn(!!data.session));
+    const { data } = supabase.auth.onAuthStateChange((_e, session) => {
+      setSignedIn(!!session);
+    });
+    return () => data.subscription.unsubscribe();
   }, []);
 
   const toggle = () => {
@@ -75,6 +85,23 @@ export function SiteHeader() {
           >
             {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
+          <Link
+            to={signedIn ? "/admin" : "/login"}
+            aria-label={signedIn ? "Admin" : "Sign in"}
+            className="ml-1 inline-flex items-center gap-1.5 rounded-md border border-border bg-background px-2.5 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-muted"
+          >
+            {signedIn ? (
+              <>
+                <LayoutDashboard className="h-3.5 w-3.5" />
+                Admin
+              </>
+            ) : (
+              <>
+                <LogIn className="h-3.5 w-3.5" />
+                Sign in
+              </>
+            )}
+          </Link>
         </div>
       </div>
     </header>
