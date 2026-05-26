@@ -1,6 +1,7 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Moon, Sun, Search } from "lucide-react";
+import { Moon, Sun, Search, LogIn, LayoutDashboard } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const nav = [
   { to: "/", label: "Home" },
@@ -13,6 +14,7 @@ const nav = [
 export function SiteHeader() {
   const path = useRouterState({ select: (s) => s.location.pathname });
   const [dark, setDark] = useState(false);
+  const [signedIn, setSignedIn] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem("theme");
@@ -20,6 +22,14 @@ export function SiteHeader() {
     const isDark = stored ? stored === "dark" : prefers;
     setDark(isDark);
     document.documentElement.classList.toggle("dark", isDark);
+  }, []);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => setSignedIn(!!data.session));
+    const { data } = supabase.auth.onAuthStateChange((_e, session) => {
+      setSignedIn(!!session);
+    });
+    return () => data.subscription.unsubscribe();
   }, []);
 
   const toggle = () => {
