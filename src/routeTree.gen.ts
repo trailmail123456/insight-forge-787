@@ -23,6 +23,10 @@ import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
 import { Route as AuthenticatedAdminPostsRouteImport } from './routes/_authenticated/admin/posts'
 import { Route as AuthenticatedAdminPapersRouteImport } from './routes/_authenticated/admin/papers'
+import { Route as AuthenticatedAdminPostsNewRouteImport } from './routes/_authenticated/admin/posts.new'
+import { Route as AuthenticatedAdminPostsIdRouteImport } from './routes/_authenticated/admin/posts.$id'
+import { Route as AuthenticatedAdminPapersNewRouteImport } from './routes/_authenticated/admin/papers.new'
+import { Route as AuthenticatedAdminPapersIdRouteImport } from './routes/_authenticated/admin/papers.$id'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -94,6 +98,30 @@ const AuthenticatedAdminPapersRoute =
     path: '/papers',
     getParentRoute: () => AuthenticatedAdminRoute,
   } as any)
+const AuthenticatedAdminPostsNewRoute =
+  AuthenticatedAdminPostsNewRouteImport.update({
+    id: '/new',
+    path: '/new',
+    getParentRoute: () => AuthenticatedAdminPostsRoute,
+  } as any)
+const AuthenticatedAdminPostsIdRoute =
+  AuthenticatedAdminPostsIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => AuthenticatedAdminPostsRoute,
+  } as any)
+const AuthenticatedAdminPapersNewRoute =
+  AuthenticatedAdminPapersNewRouteImport.update({
+    id: '/new',
+    path: '/new',
+    getParentRoute: () => AuthenticatedAdminPapersRoute,
+  } as any)
+const AuthenticatedAdminPapersIdRoute =
+  AuthenticatedAdminPapersIdRouteImport.update({
+    id: '/$id',
+    path: '/$id',
+    getParentRoute: () => AuthenticatedAdminPapersRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -106,9 +134,13 @@ export interface FileRoutesByFullPath {
   '/search': typeof SearchRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
-  '/admin/papers': typeof AuthenticatedAdminPapersRoute
-  '/admin/posts': typeof AuthenticatedAdminPostsRoute
+  '/admin/papers': typeof AuthenticatedAdminPapersRouteWithChildren
+  '/admin/posts': typeof AuthenticatedAdminPostsRouteWithChildren
   '/admin/': typeof AuthenticatedAdminIndexRoute
+  '/admin/papers/$id': typeof AuthenticatedAdminPapersIdRoute
+  '/admin/papers/new': typeof AuthenticatedAdminPapersNewRoute
+  '/admin/posts/$id': typeof AuthenticatedAdminPostsIdRoute
+  '/admin/posts/new': typeof AuthenticatedAdminPostsNewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -120,9 +152,13 @@ export interface FileRoutesByTo {
   '/papers': typeof PapersRoute
   '/search': typeof SearchRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/admin/papers': typeof AuthenticatedAdminPapersRoute
-  '/admin/posts': typeof AuthenticatedAdminPostsRoute
+  '/admin/papers': typeof AuthenticatedAdminPapersRouteWithChildren
+  '/admin/posts': typeof AuthenticatedAdminPostsRouteWithChildren
   '/admin': typeof AuthenticatedAdminIndexRoute
+  '/admin/papers/$id': typeof AuthenticatedAdminPapersIdRoute
+  '/admin/papers/new': typeof AuthenticatedAdminPapersNewRoute
+  '/admin/posts/$id': typeof AuthenticatedAdminPostsIdRoute
+  '/admin/posts/new': typeof AuthenticatedAdminPostsNewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -137,9 +173,13 @@ export interface FileRoutesById {
   '/search': typeof SearchRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
-  '/_authenticated/admin/papers': typeof AuthenticatedAdminPapersRoute
-  '/_authenticated/admin/posts': typeof AuthenticatedAdminPostsRoute
+  '/_authenticated/admin/papers': typeof AuthenticatedAdminPapersRouteWithChildren
+  '/_authenticated/admin/posts': typeof AuthenticatedAdminPostsRouteWithChildren
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
+  '/_authenticated/admin/papers/$id': typeof AuthenticatedAdminPapersIdRoute
+  '/_authenticated/admin/papers/new': typeof AuthenticatedAdminPapersNewRoute
+  '/_authenticated/admin/posts/$id': typeof AuthenticatedAdminPostsIdRoute
+  '/_authenticated/admin/posts/new': typeof AuthenticatedAdminPostsNewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -157,6 +197,10 @@ export interface FileRouteTypes {
     | '/admin/papers'
     | '/admin/posts'
     | '/admin/'
+    | '/admin/papers/$id'
+    | '/admin/papers/new'
+    | '/admin/posts/$id'
+    | '/admin/posts/new'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -171,6 +215,10 @@ export interface FileRouteTypes {
     | '/admin/papers'
     | '/admin/posts'
     | '/admin'
+    | '/admin/papers/$id'
+    | '/admin/papers/new'
+    | '/admin/posts/$id'
+    | '/admin/posts/new'
   id:
     | '__root__'
     | '/'
@@ -187,6 +235,10 @@ export interface FileRouteTypes {
     | '/_authenticated/admin/papers'
     | '/_authenticated/admin/posts'
     | '/_authenticated/admin/'
+    | '/_authenticated/admin/papers/$id'
+    | '/_authenticated/admin/papers/new'
+    | '/_authenticated/admin/posts/$id'
+    | '/_authenticated/admin/posts/new'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -302,18 +354,78 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAdminPapersRouteImport
       parentRoute: typeof AuthenticatedAdminRoute
     }
+    '/_authenticated/admin/posts/new': {
+      id: '/_authenticated/admin/posts/new'
+      path: '/new'
+      fullPath: '/admin/posts/new'
+      preLoaderRoute: typeof AuthenticatedAdminPostsNewRouteImport
+      parentRoute: typeof AuthenticatedAdminPostsRoute
+    }
+    '/_authenticated/admin/posts/$id': {
+      id: '/_authenticated/admin/posts/$id'
+      path: '/$id'
+      fullPath: '/admin/posts/$id'
+      preLoaderRoute: typeof AuthenticatedAdminPostsIdRouteImport
+      parentRoute: typeof AuthenticatedAdminPostsRoute
+    }
+    '/_authenticated/admin/papers/new': {
+      id: '/_authenticated/admin/papers/new'
+      path: '/new'
+      fullPath: '/admin/papers/new'
+      preLoaderRoute: typeof AuthenticatedAdminPapersNewRouteImport
+      parentRoute: typeof AuthenticatedAdminPapersRoute
+    }
+    '/_authenticated/admin/papers/$id': {
+      id: '/_authenticated/admin/papers/$id'
+      path: '/$id'
+      fullPath: '/admin/papers/$id'
+      preLoaderRoute: typeof AuthenticatedAdminPapersIdRouteImport
+      parentRoute: typeof AuthenticatedAdminPapersRoute
+    }
   }
 }
 
+interface AuthenticatedAdminPapersRouteChildren {
+  AuthenticatedAdminPapersIdRoute: typeof AuthenticatedAdminPapersIdRoute
+  AuthenticatedAdminPapersNewRoute: typeof AuthenticatedAdminPapersNewRoute
+}
+
+const AuthenticatedAdminPapersRouteChildren: AuthenticatedAdminPapersRouteChildren =
+  {
+    AuthenticatedAdminPapersIdRoute: AuthenticatedAdminPapersIdRoute,
+    AuthenticatedAdminPapersNewRoute: AuthenticatedAdminPapersNewRoute,
+  }
+
+const AuthenticatedAdminPapersRouteWithChildren =
+  AuthenticatedAdminPapersRoute._addFileChildren(
+    AuthenticatedAdminPapersRouteChildren,
+  )
+
+interface AuthenticatedAdminPostsRouteChildren {
+  AuthenticatedAdminPostsIdRoute: typeof AuthenticatedAdminPostsIdRoute
+  AuthenticatedAdminPostsNewRoute: typeof AuthenticatedAdminPostsNewRoute
+}
+
+const AuthenticatedAdminPostsRouteChildren: AuthenticatedAdminPostsRouteChildren =
+  {
+    AuthenticatedAdminPostsIdRoute: AuthenticatedAdminPostsIdRoute,
+    AuthenticatedAdminPostsNewRoute: AuthenticatedAdminPostsNewRoute,
+  }
+
+const AuthenticatedAdminPostsRouteWithChildren =
+  AuthenticatedAdminPostsRoute._addFileChildren(
+    AuthenticatedAdminPostsRouteChildren,
+  )
+
 interface AuthenticatedAdminRouteChildren {
-  AuthenticatedAdminPapersRoute: typeof AuthenticatedAdminPapersRoute
-  AuthenticatedAdminPostsRoute: typeof AuthenticatedAdminPostsRoute
+  AuthenticatedAdminPapersRoute: typeof AuthenticatedAdminPapersRouteWithChildren
+  AuthenticatedAdminPostsRoute: typeof AuthenticatedAdminPostsRouteWithChildren
   AuthenticatedAdminIndexRoute: typeof AuthenticatedAdminIndexRoute
 }
 
 const AuthenticatedAdminRouteChildren: AuthenticatedAdminRouteChildren = {
-  AuthenticatedAdminPapersRoute: AuthenticatedAdminPapersRoute,
-  AuthenticatedAdminPostsRoute: AuthenticatedAdminPostsRoute,
+  AuthenticatedAdminPapersRoute: AuthenticatedAdminPapersRouteWithChildren,
+  AuthenticatedAdminPostsRoute: AuthenticatedAdminPostsRouteWithChildren,
   AuthenticatedAdminIndexRoute: AuthenticatedAdminIndexRoute,
 }
 
