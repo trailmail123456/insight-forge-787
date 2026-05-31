@@ -42,6 +42,7 @@
   --color-ring: var(--ring);
   --color-surface: var(--surface);
   --color-surface-foreground: var(--surface-foreground);
+  --color-teal: var(--teal);
 }
 
 :root {
@@ -78,6 +79,7 @@
   --border: oklch(0.92 0.008 252);
   --input: oklch(0.92 0.008 252);
   --ring: oklch(0.55 0.18 260);
+  --teal: oklch(0.62 0.12 168);
 }
 
 .dark {
@@ -111,6 +113,7 @@
   --border: oklch(0.28 0.014 260);
   --input: oklch(0.28 0.014 260);
   --ring: oklch(0.72 0.16 255);
+  --teal: oklch(0.7 0.13 170);
 }
 
 @layer base {
