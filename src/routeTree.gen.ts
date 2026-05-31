@@ -19,6 +19,7 @@ import { Route as BlogRouteImport } from './routes/blog'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAdminIndexRouteImport } from './routes/_authenticated/admin/index'
 import { Route as AuthenticatedAdminPostsRouteImport } from './routes/_authenticated/admin/posts'
@@ -77,6 +78,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => BlogRoute,
+} as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -126,7 +132,7 @@ const AuthenticatedAdminPapersIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/categories': typeof CategoriesRoute
   '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
@@ -134,6 +140,7 @@ export interface FileRoutesByFullPath {
   '/search': typeof SearchRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/blog/$slug': typeof BlogSlugRoute
   '/admin/papers': typeof AuthenticatedAdminPapersRouteWithChildren
   '/admin/posts': typeof AuthenticatedAdminPostsRouteWithChildren
   '/admin/': typeof AuthenticatedAdminIndexRoute
@@ -145,13 +152,14 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/categories': typeof CategoriesRoute
   '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
   '/papers': typeof PapersRoute
   '/search': typeof SearchRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/admin/papers': typeof AuthenticatedAdminPapersRouteWithChildren
   '/admin/posts': typeof AuthenticatedAdminPostsRouteWithChildren
   '/admin': typeof AuthenticatedAdminIndexRoute
@@ -165,7 +173,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/about': typeof AboutRoute
-  '/blog': typeof BlogRoute
+  '/blog': typeof BlogRouteWithChildren
   '/categories': typeof CategoriesRoute
   '/contact': typeof ContactRoute
   '/login': typeof LoginRoute
@@ -173,6 +181,7 @@ export interface FileRoutesById {
   '/search': typeof SearchRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRouteWithChildren
+  '/blog/$slug': typeof BlogSlugRoute
   '/_authenticated/admin/papers': typeof AuthenticatedAdminPapersRouteWithChildren
   '/_authenticated/admin/posts': typeof AuthenticatedAdminPostsRouteWithChildren
   '/_authenticated/admin/': typeof AuthenticatedAdminIndexRoute
@@ -194,6 +203,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/sitemap.xml'
     | '/admin'
+    | '/blog/$slug'
     | '/admin/papers'
     | '/admin/posts'
     | '/admin/'
@@ -212,6 +222,7 @@ export interface FileRouteTypes {
     | '/papers'
     | '/search'
     | '/sitemap.xml'
+    | '/blog/$slug'
     | '/admin/papers'
     | '/admin/posts'
     | '/admin'
@@ -232,6 +243,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/sitemap.xml'
     | '/_authenticated/admin'
+    | '/blog/$slug'
     | '/_authenticated/admin/papers'
     | '/_authenticated/admin/posts'
     | '/_authenticated/admin/'
@@ -245,7 +257,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
   AboutRoute: typeof AboutRoute
-  BlogRoute: typeof BlogRoute
+  BlogRoute: typeof BlogRouteWithChildren
   CategoriesRoute: typeof CategoriesRoute
   ContactRoute: typeof ContactRoute
   LoginRoute: typeof LoginRoute
@@ -325,6 +337,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof BlogRoute
     }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
@@ -444,11 +463,21 @@ const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
   AuthenticatedRouteChildren,
 )
 
+interface BlogRouteChildren {
+  BlogSlugRoute: typeof BlogSlugRoute
+}
+
+const BlogRouteChildren: BlogRouteChildren = {
+  BlogSlugRoute: BlogSlugRoute,
+}
+
+const BlogRouteWithChildren = BlogRoute._addFileChildren(BlogRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
   AboutRoute: AboutRoute,
-  BlogRoute: BlogRoute,
+  BlogRoute: BlogRouteWithChildren,
   CategoriesRoute: CategoriesRoute,
   ContactRoute: ContactRoute,
   LoginRoute: LoginRoute,
@@ -459,3 +488,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
