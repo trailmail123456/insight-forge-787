@@ -1,66 +1,136 @@
 import { Link } from "@tanstack/react-router";
-import { Rss, Github, Twitter } from "lucide-react";
-import { ThemeToggle } from "./theme-toggle";
+import { Rss, Github, Twitter, Mail } from "lucide-react";
 
 export function SiteFooter() {
   return (
-    <footer className="mt-24 border-t border-border/60">
-      <div className="container-wide grid gap-10 py-14 sm:grid-cols-2 md:grid-cols-4">
-        <div className="md:col-span-2">
-          <div className="flex items-center gap-2.5">
-            <div className="grid h-7 w-7 place-items-center rounded-md bg-foreground text-background">
-              <span className="font-display text-xs font-bold">K</span>
+    <footer
+      className="mt-24"
+      style={{
+        background: "var(--bg-footer)",
+        borderTop: "1px solid var(--border)",
+        padding: "60px 0 32px",
+      }}
+    >
+      <div className="container-wide">
+        <div className="grid gap-12 md:grid-cols-[2fr_1fr_1fr_1fr] mb-12">
+          <div>
+            <div className="flex items-center gap-2.5">
+              <div
+                className="grid h-9 w-9 place-items-center rounded-[10px] text-white"
+                style={{
+                  background: "linear-gradient(135deg,#7C3AED,#06B6D4)",
+                  boxShadow: "0 0 18px rgba(124,58,237,.45)",
+                  fontFamily: "var(--font-sans)",
+                  fontWeight: 700,
+                  fontSize: 14,
+                }}
+              >K</div>
+              <span className="text-foreground" style={{ fontFamily: "var(--font-sans)", fontWeight: 600, fontSize: 16 }}>
+                Knowledge Labs
+              </span>
             </div>
-            <span className="font-display text-base font-semibold tracking-tight">
-              Knowledge Labs
-            </span>
+            <p className="mt-4 max-w-sm text-sm leading-relaxed" style={{ color: "var(--text-muted)" }}>
+              An independent research and writing space focused on AI, LLMs,
+              computer vision, and the engineering beneath them.
+            </p>
+            <div className="mt-5 flex items-center gap-2">
+              {[
+                { href: "/rss.xml", Icon: Rss, label: "RSS" },
+                { href: "https://twitter.com", Icon: Twitter, label: "Twitter" },
+                { href: "https://github.com", Icon: Github, label: "GitHub" },
+                { href: "mailto:hello@knowledgelabs.xyz", Icon: Mail, label: "Email" },
+              ].map(({ href, Icon, label }) => (
+                <a
+                  key={label}
+                  href={href}
+                  aria-label={label}
+                  className="grid h-9 w-9 place-items-center rounded-lg"
+                  style={{
+                    background: "rgba(255,255,255,.04)",
+                    border: "1px solid var(--border)",
+                    color: "var(--text-muted)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = "var(--border-hover)";
+                    e.currentTarget.style.color = "var(--text-accent)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = "var(--border)";
+                    e.currentTarget.style.color = "var(--text-muted)";
+                  }}
+                >
+                  <Icon className="h-4 w-4" strokeWidth={1.5} />
+                </a>
+              ))}
+            </div>
           </div>
-          <p className="mt-4 max-w-sm text-sm leading-relaxed text-muted-foreground">
-            A research and writing space focused on AI, LLMs, computer vision,
-            and deep technical ideas.
-          </p>
-          <div className="mt-5 flex items-center gap-2">
-            <a href="/rss.xml" aria-label="RSS feed" className="inline-flex items-center gap-1.5 rounded-md border border-border bg-background px-2.5 py-1.5 text-xs text-muted-foreground hover:text-foreground">
-              <Rss className="h-3.5 w-3.5" /> RSS
-            </a>
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter" className="grid h-8 w-8 place-items-center rounded-md border border-border text-muted-foreground hover:text-foreground">
-              <Twitter className="h-3.5 w-3.5" />
-            </a>
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="grid h-8 w-8 place-items-center rounded-md border border-border text-muted-foreground hover:text-foreground">
-              <Github className="h-3.5 w-3.5" />
-            </a>
-          </div>
+
+          <FooterCol
+            title="Read"
+            links={[
+              { to: "/blog", label: "Essays" },
+              { to: "/papers", label: "Research" },
+              { to: "/categories", label: "Topics" },
+              { href: "/rss.xml", label: "RSS feed" },
+            ]}
+          />
+          <FooterCol
+            title="Site"
+            links={[
+              { to: "/about", label: "About" },
+              { to: "/contact", label: "Contact" },
+              { href: "/sitemap.xml", label: "Sitemap" },
+            ]}
+          />
+          <FooterCol
+            title="Connect"
+            links={[
+              { href: "https://twitter.com", label: "Twitter / X" },
+              { href: "https://github.com", label: "GitHub" },
+              { href: "mailto:hello@knowledgelabs.xyz", label: "Email" },
+            ]}
+          />
         </div>
 
-        <div>
-          <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Read</h4>
-          <ul className="mt-4 space-y-2.5 text-sm">
-            <li><Link to="/blog" className="text-muted-foreground hover:text-foreground">Blog</Link></li>
-            <li><Link to="/papers" className="text-muted-foreground hover:text-foreground">Research papers</Link></li>
-            <li><Link to="/categories" className="text-muted-foreground hover:text-foreground">Categories</Link></li>
-            <li><a href="/rss.xml" className="text-muted-foreground hover:text-foreground">RSS feed</a></li>
-          </ul>
-        </div>
-
-        <div>
-          <h4 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Site</h4>
-          <ul className="mt-4 space-y-2.5 text-sm">
-            <li><Link to="/about" className="text-muted-foreground hover:text-foreground">About</Link></li>
-            <li><Link to="/contact" className="text-muted-foreground hover:text-foreground">Contact</Link></li>
-            <li><a href="/sitemap.xml" className="text-muted-foreground hover:text-foreground">Sitemap</a></li>
-          </ul>
-          <div className="mt-6">
-            <ThemeToggle />
-          </div>
-        </div>
-      </div>
-
-      <div className="border-t border-border/60">
-        <div className="container-wide flex flex-col items-start justify-between gap-3 py-6 text-xs text-muted-foreground md:flex-row md:items-center">
-          <p>© {new Date().getFullYear()} Knowledge Labs. All rights reserved.</p>
-          <p className="font-mono">Built for long-form reading.</p>
+        <div
+          className="pt-6 flex flex-col md:flex-row md:items-center md:justify-between gap-3 text-xs"
+          style={{ borderTop: "1px solid var(--border)", color: "var(--text-muted)" }}
+        >
+          <p>© {new Date().getFullYear()} Knowledge Labs <span style={{ color: "var(--accent-mid)" }}>·</span> All rights reserved.</p>
+          <p style={{ fontFamily: "var(--font-mono)" }}>Built for long-form reading.</p>
         </div>
       </div>
     </footer>
+  );
+}
+
+function FooterCol({ title, links }: { title: string; links: Array<{ to?: string; href?: string; label: string }> }) {
+  return (
+    <div>
+      <h4 style={{
+        fontFamily: "var(--font-sans)",
+        fontWeight: 600,
+        fontSize: 11,
+        color: "var(--text-accent)",
+        textTransform: "uppercase",
+        letterSpacing: "0.12em",
+        marginBottom: 16,
+      }}>{title}</h4>
+      <ul>
+        {links.map((l) => (
+          <li key={l.label}>
+            {l.to ? (
+              <Link to={l.to} className="block py-1 text-sm" style={{ color: "var(--text-secondary)" }}>
+                {l.label}
+              </Link>
+            ) : (
+              <a href={l.href} className="block py-1 text-sm" style={{ color: "var(--text-secondary)" }}>
+                {l.label}
+              </a>
+            )}
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }

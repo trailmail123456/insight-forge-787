@@ -12,6 +12,9 @@ import { useEffect } from "react";
 import appCss from "../styles.css?url";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { PageLoader } from "@/components/page-loader";
+import { AnnouncementBar } from "@/components/announcement-bar";
+import { GlobalEffects } from "@/components/global-effects";
 import { supabase } from "@/integrations/supabase/client";
 
 function NotFoundComponent() {
@@ -80,7 +83,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap",
       },
     ],
     scripts: [
@@ -103,7 +106,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <head>
         <HeadContent />
         <script
@@ -126,7 +129,10 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthSync router={router} />
+      <PageLoader />
+      <GlobalEffects />
       <div className="flex min-h-screen flex-col">
+        <AnnouncementBar />
         <SiteHeader />
         <main className="flex-1">
           <Outlet />
