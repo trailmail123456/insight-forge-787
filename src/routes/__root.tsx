@@ -129,7 +129,10 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthSync router={router} />
+      <PageLoader />
+      <GlobalEffects />
       <div className="flex min-h-screen flex-col">
+        <AnnouncementBar />
         <SiteHeader />
         <main className="flex-1">
           <Outlet />
