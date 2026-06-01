@@ -76,6 +76,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:site_name", content: "Knowledge Labs" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
+      { property: "og:title", content: "Knowledge Labs — Research & writing on AI, LLMs, and computer vision" },
+      { name: "twitter:title", content: "Knowledge Labs — Research & writing on AI, LLMs, and computer vision" },
+      { property: "og:description", content: "A research and writing space focused on AI, LLMs, computer vision, and deep technical ideas." },
+      { name: "twitter:description", content: "A research and writing space focused on AI, LLMs, computer vision, and deep technical ideas." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/99b8701c-636c-44da-91b5-41e8ac2ca422/id-preview-56cf71e0--587e26da-bfa2-4a1d-9a19-b8c6b0a81fcb.lovable.app-1780305512161.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/99b8701c-636c-44da-91b5-41e8ac2ca422/id-preview-56cf71e0--587e26da-bfa2-4a1d-9a19-b8c6b0a81fcb.lovable.app-1780305512161.png" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
