@@ -12,6 +12,9 @@ import { useEffect } from "react";
 import appCss from "../styles.css?url";
 import { SiteHeader } from "@/components/site-header";
 import { SiteFooter } from "@/components/site-footer";
+import { PageLoader } from "@/components/page-loader";
+import { AnnouncementBar } from "@/components/announcement-bar";
+import { GlobalEffects } from "@/components/global-effects";
 import { supabase } from "@/integrations/supabase/client";
 
 function NotFoundComponent() {
